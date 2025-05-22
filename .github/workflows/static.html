@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f3f4f6;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px;
+            }
+        
+            h1 {
+                color: #111827;
+                margin-bottom: 20px;
+            }
+        
+            .input-group {
+                display: flex;
+                align-items: center;
+                margin: 8px 0;
+            }
+        
+            input[type="number"], select {
+                padding: 10px;
+                margin: 5px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 16px;
+                box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+            }
+        
+            input[type="number"] {
+                width: 500px;
+            }
+        
+            select {
+                width: 400px;
+            }
+        
+            input[type="button"] {
+                padding: 12px 24px;
+                margin-top: 20px;
+                background-color: #2563eb;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+        
+            input[type="button"]:hover {
+                background-color: #1d4ed8;
+            }
+        
+            #output {
+                margin-top: 25px;
+                font-size: 18px;
+                color: #111827;
+                background-color: #e0f2fe;
+                padding: 15px 25px;
+                border-radius: 10px;
+                border: 1px solid #bae6fd;
+                max-width: 400px;
+                text-align: center;
+                box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+        
+        <script>
+            function calculate(){
+                let answer =0;
+                let R=0.08206;
+                let avo = 6.022*Math.pow(10,23);
+                let P = document.getElementById('P').valueAsNumber;
+                let Punit = document.getElementById('Punit').value;
+                let V = document.getElementById('V').valueAsNumber;
+                let Vunit = document.getElementById('Vunit').value;
+                let n = document.getElementById('n').valueAsNumber;
+                let nunit = document.getElementById('nunit').value;
+                let T = document.getElementById('T').valueAsNumber;
+                let Tunit = document.getElementById('Tunit').value;
+                if(Punit == 'torr'){
+                    P=P/760.0;
+                }else if(Punit == 'kpa'){
+                    P=P/101.325;
+                }
+                if(Vunit == 'ml'){
+                    V=V/1000.0;
+                }
+                if(nunit == 'pt'){
+                    n=n/(avo);
+                }
+                if(Tunit == 'C'){
+                    T = T+273.15;
+                }
+                if(!isNaN(P)&&!isNaN(V)&&!isNaN(n)&&isNaN(T)){
+                    answer = (P*V)/(n*R);
+                    console.log("calculating T");
+                    document.getElementById('output').innerHTML = "Temperature is" + answer + " Kelvin";
+                }else if(!isNaN(P)&&!isNaN(V)&&isNaN(n)&&!isNaN(T)){
+                    answer = (P*V)/(R*T);
+                    console.log("calculating n");
+                    document.getElementById('output').innerHTML = "Number of particles is" + answer + "moles";
+                }else if(!isNaN(P)&&isNaN(V)&&!isNaN(n)&&!isNaN(T)){
+                    answer = (n*R*T)/P;
+                    console.log("calculating V");
+                    document.getElementById('output').innerHTML = "Volume is" + answer + "liters";
+                }else if(isNaN(P)&&!isNaN(V)&&!isNaN(n)&&!isNaN(T)){
+                    answer = (n*R*T)/V;
+                    console.log("calculating P");
+                    document.getElementById('output').innerHTML = "Pressure is" + answer + "standard atmosphere";
+                }else{
+                    document.getElementById('output').innerHTML = "Please enter 3 values";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <input type="number" id="P" placeholder="Enter the pressure">
+        <select id="Punit">
+            <option value="atm">standard atmosphere</option>
+            <option value="torr">Torr or mm Hg</option>
+            <option value="kpa">Kilopascal</option>
+        </select>
+        <input type="number" id="V" placeholder="Enter the volume">
+        <select id="Vunit">
+            <option value="l">Liter or dm³</option>
+            <option value="ml">mililiter or cm³</option>
+        </select>
+        <input type="number" id="n" placeholder="Enter the number of particles">
+        <select id="nunit">
+            <option value="mol">moles</option>
+            <option value="pt">particles</option>
+        </select>
+        <input type="number" id="T" placeholder="Enter the temperature">
+        <select id="Tunit">
+            <option value="K">Kelvin</option>
+            <option value="C">Celcius</option>
+        </select>
+        <input type="button" onclick="calculate()" value="calculate">
+        <div id="output"></div>
+    </body>
+</html>
